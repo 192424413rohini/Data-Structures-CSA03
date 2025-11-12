@@ -1,0 +1,19 @@
+#include <stdio.h>
+int main() {
+    char a[50];
+    int n, i, j;
+    printf("Enter number of characters: ");
+    scanf("%d", &n);
+    printf("Enter %d characters:\n", n);
+    for(i = 0; i < n; i++)
+        scanf(" %c", &a[i]);
+    printf("\nRepeated characters and their indexes:\n");
+    for(i = 0; i < n; i++) {
+        for(j = i + 1; j < n; j++) {
+            if(a[i] == a[j]) {
+                printf("Character '%c' repeated at indexes %d and %d\n", a[i], i, j);
+            }
+        }
+    }
+    return 0;
+}
