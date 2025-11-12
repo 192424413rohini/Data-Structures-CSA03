@@ -1,0 +1,28 @@
+#include <stdio.h>
+#define MAX 5
+int main() {
+    int stack[MAX], top = -1, item, n, i;
+    printf("Enter number of elements to push (max %d): ", MAX);
+    scanf("%d", &n);
+    for(i = 0; i < n; i++) {
+        printf("Enter element: ");
+        scanf("%d", &item);
+        if(top == MAX - 1)
+            printf("Stack Overflow!\n");
+        else
+            stack[++top] = item;
+    }
+    printf("\nStack before POP: ");
+    for(i = top; i >= 0; i--)
+        printf("%d ", stack[i]);
+    if(top == -1)
+        printf("\n\nStack Underflow! No elements to pop.\n");
+    else {
+        item = stack[top--];
+        printf("\n\nPopped element = %d\n", item);
+    }
+    printf("\nStack after POP: ");
+    for(i = top; i >= 0; i--)
+        printf("%d ", stack[i]);
+    return 0;
+}
