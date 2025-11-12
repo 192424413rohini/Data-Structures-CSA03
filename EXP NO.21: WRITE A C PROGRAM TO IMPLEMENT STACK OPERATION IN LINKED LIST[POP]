@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+    int data;
+    struct node *next;
+};
+int main() {
+    struct node *top = NULL, *temp, *newnode;
+    int n, i, item;
+    printf("Enter number of elements to push: ");
+    scanf("%d", &n);
+    for(i = 0; i < n; i++) {
+        newnode = (struct node*)malloc(sizeof(struct node));
+        printf("Enter element to push: ");
+        scanf("%d", &item);
+        newnode->data = item;
+        newnode->next = top;
+        top = newnode;
+    }
+    if(top == NULL)
+        printf("\nStack Underflow! No elements to pop.\n");
+    else {
+        temp = top;
+        printf("\nPopped element = %d\n", temp->data);
+        top = top->next;
+        free(temp);
+    }
+    printf("\nStack after POP (Top to Bottom): ");
+    temp = top;
+    if(temp == NULL)
+        printf("Stack is empty\n");
+    else {
+        while(temp != NULL) {
+            printf("%d ", temp->data);
+            temp = temp->next;
+        }
+    }
+    return 0;
+}
