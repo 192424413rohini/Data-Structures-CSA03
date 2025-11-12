@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+    int data;
+    struct node *next;
+};
+int main() {
+    struct node *top = NULL, *newnode, *temp;
+    int n, i, item;
+    printf("Enter number of elements to push: ");
+    scanf("%d", &n);
+    for(i = 0; i < n; i++) {
+        newnode = (struct node*)malloc(sizeof(struct node));
+        printf("Enter element: ");
+        scanf("%d", &item);
+        newnode->data = item;
+        newnode->next = top;
+        top = newnode;
+    }
+    printf("\n--- Stack Display ---\n");
+    if(top == NULL)
+        printf("Stack is empty.\n");
+    else {
+        temp = top;
+        printf("Stack elements (Top to Bottom): ");
+        while(temp != NULL) {
+            printf("%d ", temp->data);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+    return 0;
+}
