@@ -1,0 +1,23 @@
+#include <stdio.h>
+int main() {
+    int reg[100], n, key, i, found = 0;
+    printf("Enter number of students: ");
+    scanf("%d", &n);
+    printf("Enter %d registration numbers:\n", n);
+    for(i = 0; i < n; i++) {
+        scanf("%d", &reg[i]);
+    }
+    printf("Enter registration number to search: ");
+    scanf("%d", &key);
+    for(i = 0; i < n; i++) {
+        if(reg[i] == key) {
+            found = 1;
+            break;
+        }
+    }
+    if(found == 1)
+        printf("Registration number found at position %d\n", i + 1);
+    else
+        printf("Registration number not found\n");
+    return 0;
+}
