@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int s1[50], s2[50];
+int top1 = -1, top2 = -1;
+
+void push1(int x){ s1[++top1] = x; }
+void push2(int x){ s2[++top2] = x; }
+int pop1(){ return s1[top1--]; }
+int pop2(){ return s2[top2--]; }
+
+void enqueue(int x) {       // Queue enqueue
+    push1(x);
+}
+
+int dequeue() {             // Queue dequeue
+    if (top1 == -1) return -1;
+
+    // Move s1 → s2
+    while (top1 != -1)
+        push2(pop1());
+
+    int val = pop2();       // front element
+
+    // Move back s2 → s1
+    while (top2 != -1)
+        push1(pop2());
+
+    return val;
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+
+    printf("Dequeue: %d\n", dequeue());
+    printf("Dequeue: %d\n", dequeue());
+
+    return 0;
+}
