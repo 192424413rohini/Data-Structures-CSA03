@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+#define MAX 20
+
+int graph[MAX][MAX];
+int visited1[MAX], visited2[MAX];
+int queue1[MAX], queue2[MAX];
+int front1 = 0, rear1 = 0;
+int front2 = 0, rear2 = 0;
+
+void enqueue1(int x) { queue1[rear1++] = x; }
+void enqueue2(int x) { queue2[rear2++] = x; }
+
+int dequeue1() { return queue1[front1++]; }
+int dequeue2() { return queue2[front2++]; }
+
+int bidirectional(int start, int goal, int n) {
+    enqueue1(start);
+    enqueue2(goal);
+    visited1[start] = visited2[goal] = 1;
+
+    while (front1 < rear1 && front2 < rear2) {
+        int s = dequeue1();
+        int g = dequeue2();
+
+        for (int i = 0; i < n; i++) {
+            if (graph[s][i] && !visited1[i]) {
+                visited1[i] = 1;
+                enqueue1(i);
+            }
+            if (graph[g][i] && !visited2[i]) {
+                visited2[i] = 1;
+                enqueue2(i);
+            }
+            if (visited1[i] && visited2[i])
+                return i;  // meeting point
+        }
+    }
+    return -1;
+}
+
+int main() {
+    int n, start, goal;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &graph[i][j]);
+
+    printf("Enter Start node: ");
+    scanf("%d", &start);
+
+    printf("Enter Goal node: ");
+    scanf("%d", &goal);
+
+    int meet = bidirectional(start, goal, n);
+
+    if (meet != -1)
+        printf("\nPath Found! Searches met at node %d\n", meet);
+    else
+        printf("\nNo path found.\n");
+
+    return 0;
+}
