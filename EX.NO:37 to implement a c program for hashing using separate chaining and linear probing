@@ -1,0 +1,175 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define SIZE 7
+#define EMPTY -1
+#define DELETED -2
+
+/* ---------- Separate Chaining (Linked List) ---------- */
+typedef struct Node {
+    int key;
+    struct Node *next;
+} Node;
+
+Node* chainTable[SIZE];
+
+Node* newNode(int key) {
+    Node* p = (Node*)malloc(sizeof(Node));
+    p->key = key; p->next = NULL; return p;
+}
+
+void chainInsert(int key) {
+    int idx = key % SIZE;
+    Node* p = newNode(key);
+    p->next = chainTable[idx];
+    chainTable[idx] = p;
+    printf("Inserted %d in chaining at bucket %d\n", key, idx);
+}
+
+int chainSearch(int key) {
+    int idx = key % SIZE;
+    Node* cur = chainTable[idx];
+    while (cur) {
+        if (cur->key == key) return idx;
+        cur = cur->next;
+    }
+    return -1;
+}
+
+int chainDelete(int key) {
+    int idx = key % SIZE;
+    Node *cur = chainTable[idx], *prev = NULL;
+    while (cur) {
+        if (cur->key == key) {
+            if (prev) prev->next = cur->next;
+            else chainTable[idx] = cur->next;
+            free(cur);
+            return 1;
+        }
+        prev = cur; cur = cur->next;
+    }
+    return 0;
+}
+
+void chainDisplay() {
+    printf("\nChaining Table:\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d: ", i);
+        Node* cur = chainTable[i];
+        while (cur) {
+            printf("%d -> ", cur->key);
+            cur = cur->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+/* ---------- Linear Probing ---------- */
+int lpTable[SIZE];
+
+void lpInit() {
+    for (int i = 0; i < SIZE; i++) lpTable[i] = EMPTY;
+}
+
+void lpInsert(int key) {
+    int idx = key % SIZE;
+    int start = idx;
+    while (lpTable[idx] != EMPTY && lpTable[idx] != DELETED) {
+        idx = (idx + 1) % SIZE;
+        if (idx == start) { printf("Table full, cannot insert %d\n", key); return; }
+    }
+    lpTable[idx] = key;
+    printf("Inserted %d in linear probing at index %d\n", key, idx);
+}
+
+int lpSearch(int key) {
+    int idx = key % SIZE, start = idx;
+    while (lpTable[idx] != EMPTY) {
+        if (lpTable[idx] == key) return idx;
+        idx = (idx + 1) % SIZE;
+        if (idx == start) break;
+    }
+    return -1;
+}
+
+int lpDelete(int key) {
+    int pos = lpSearch(key);
+    if (pos != -1) {
+        lpTable[pos] = DELETED;
+        return 1;
+    }
+    return 0;
+}
+
+void lpDisplay() {
+    printf("\nLinear Probing Table:\nIndex : Key\n");
+    for (int i = 0; i < SIZE; i++) {
+        if (lpTable[i] == EMPTY) printf("%3d : EMPTY\n", i);
+        else if (lpTable[i] == DELETED) printf("%3d : DELETED\n", i);
+        else printf("%3d : %d\n", i, lpTable[i]);
+    }
+}
+
+/* ---------- Menu & Main ---------- */
+void initAll() {
+    for (int i = 0; i < SIZE; i++) chainTable[i] = NULL;
+    lpInit();
+}
+
+int main() {
+    initAll();
+    int method = 0;
+    printf("Hashing Methods Program (SIZE = %d)\n", SIZE);
+    while (1) {
+        printf("\nChoose method: 1) Separate Chaining  2) Linear Probing  3) Exit\n");
+        scanf("%d", &method);
+        if (method == 3) break;
+
+        int choice, key;
+        while (method == 1 || method == 2) {
+            printf("\nOperations: 1) Insert 2) Search 3) Delete 4) Display 5) Change Method\n");
+            printf("Enter choice: ");
+            scanf("%d", &choice);
+
+            if (choice == 5) break;
+
+            switch (choice) {
+                case 1:
+                    printf("Enter key to insert: "); scanf("%d", &key);
+                    if (method == 1) chainInsert(key); else lpInsert(key);
+                    break;
+                case 2:
+                    printf("Enter key to search: "); scanf("%d", &key);
+                    if (method == 1) {
+                        int b = chainSearch(key);
+                        if (b != -1) printf("Found %d in bucket %d\n", key, b);
+                        else printf("%d not found\n", key);
+                    } else {
+                        int p = lpSearch(key);
+                        if (p != -1) printf("Found %d at index %d\n", key, p);
+                        else printf("%d not found\n", key);
+                    }
+                    break;
+                case 3:
+                    printf("Enter key to delete: "); scanf("%d", &key);
+                    if (method == 1) {
+                        if (chainDelete(key)) printf("Deleted %d from chaining\n", key);
+                        else printf("%d not found to delete\n", key);
+                    } else {
+                        if (lpDelete(key)) printf("Deleted %d from linear probing (marked DELETED)\n", key);
+                        else printf("%d not found to delete\n", key);
+                    }
+                    break;
+                case 4:
+                    if (method == 1) chainDisplay(); else lpDisplay();
+                    break;
+                default:
+                    printf("Invalid choice\n");
+            }
+        }
+    }
+
+    printf("\nProgram ended.\n");
+    return 0;
+}
