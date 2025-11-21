@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main() {
+    int s1[50], s2[50];
+    int n1, n2;
+
+    printf("Enter size of Stack 1: ");
+    scanf("%d", &n1);
+
+    printf("Enter elements of Stack 1: ");
+    for (int i = 0; i < n1; i++)
+        scanf("%d", &s1[i]);
+
+    printf("Enter size of Stack 2: ");
+    scanf("%d", &n2);
+
+    printf("Enter elements of Stack 2: ");
+    for (int i = 0; i < n2; i++)
+        scanf("%d", &s2[i]);
+
+    int bottom1 = s1[0];          // bottom of Stack 1
+    int top2 = s2[n2 - 1];        // top of Stack 2
+    int sum = bottom1 + top2;
+
+    printf("\nBottom of Stack 1 = %d", bottom1);
+    printf("\nTop of Stack 2 = %d", top2);
+    printf("\nSum = %d\n", sum);
+
+    return 0;
+}
